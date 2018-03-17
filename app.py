@@ -26,3 +26,6 @@ def login():
         password = request.form.get('mm')
         captcha = request.form.get('v_yzm')
         return CLASS_TABLE.get_json(username, password, captcha)
+
+if __name__ == '__main__':
+    app.run()
