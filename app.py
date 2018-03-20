@@ -12,7 +12,7 @@ u = URP()
 
 @app.route('/')
 def index():
-    return render_template('index.html', index='haha')
+    return render_template('index.html', index='Ya')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -20,9 +20,8 @@ def login():
     if request.method == 'GET':
         ret = u.get_captcha_base64()
         return render_template('login.html', captcha_base64=ret)
+
         '''
-        if ret == 'TimeOut':
-            return 'Time Out!\n'
         return send_file(
             io.BytesIO(ret),
             mimetype='image/jpg'
@@ -34,8 +33,6 @@ def login():
         captcha_text = request.form.get('captcha_text')
         u.start_time(2018, 3, 5)
         ret = u.get_classtable(username, password, captcha_text)
-        if ret == 'TimeOut':
-            return 'Time Out!\n'
         return ret
 
 

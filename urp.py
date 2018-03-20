@@ -21,21 +21,8 @@ class URP:
         self.year = 2018
         self.month = 3
         self.day = 5
-        self.check_connect()
-
-    def check_connect(self):
-        try:
-            self.session.get(self.base_url, timeout=1)
-            self.timeout = False
-        except Exception:
-            self.timeout = True
 
     def get_captcha_base64(self):
-        
-        self.check_connect()
-        if self.timeout:
-            return "TimeOut"
-        
         captcha_pic = self.session.get(self.captcha_url).content
         return str(base64.b64encode(captcha_pic), encoding='utf-8')
 
@@ -45,15 +32,10 @@ class URP:
         self.day = day
 
     def get_classtable(self, username, password, captcha):
-        if self.timeout:
-            return "TimeOut"
-
         user_info = {"zjh": username, "mm": password, "v_yzm": captcha}
 
         response = self.session.post(
             self.login_url, headers=self.headers, data=user_info)
-
-        
 
         if str(response.text).find(u'<title>学分制综合教务</title>') < 0:
             return 'Error'
