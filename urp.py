@@ -22,6 +22,12 @@ class URP:
         self.month = 3
         self.day = 5
 
+    def get_state(self):
+        return self.session.cookies.get_dict().get('JSESSIONID')
+
+    def set_state(self, state):
+        self.session.cookies.set('JSESSIONID', state)
+
     def get_captcha_base64(self):
         captcha_pic = self.session.get(self.captcha_url).content
         return str(base64.b64encode(captcha_pic), encoding='utf-8')
@@ -41,6 +47,8 @@ class URP:
             return 'Error'
 
         text = self.html_head + self.session.get(self.classtable_url).text
+
+        self.session.close()
 
         soup = BeautifulSoup(text, 'lxml')
 
