@@ -3,24 +3,33 @@ import re
 import base64
 import requests
 from bs4 import BeautifulSoup
+from . import registrar
+from abc import abstractclassmethod
 
 
-class URP:
-    base_url = 'http://jw.sdau.edu.cn/'
-    captcha_url = base_url+'validateCodeAction.do'
-    login_url = base_url+'loginAction.do'
-    classtable_url = base_url+'xkAction.do?actionType=6'
-
-    html_head = '<!DOCTYPE html><html><head><meta charset="utf-8"></head>'
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
-    }
+class URP(registrar.Registrar):
 
     def __init__(self):
         self.session = requests.session()
-        self.year = 2018
-        self.month = 3
-        self.day = 5
+        self.captcha_url = ''
+        self.login_url = ''
+        self.classtable_url = ''
+        self.html_head = ''
+        self.headers = ''
+
+    @abstractclassmethod
+    def base_url(self):
+        return ''
+
+    def generate(self):
+        self.captcha_url = self.base_url()+'validateCodeAction.do'
+        self.login_url = self.base_url()+'loginAction.do'
+        self.classtable_url = self.base_url()+'xkAction.do?actionType=6'
+
+        self.html_head = '<!DOCTYPE html><html><head><meta charset="utf-8"></head>'
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36'
+        }
 
     def get_state(self):
         return self.session.cookies.get_dict().get('JSESSIONID')
@@ -29,6 +38,7 @@ class URP:
         self.session.cookies.set('JSESSIONID', state)
 
     def get_captcha_base64(self):
+        self.generate()
         captcha_pic = self.session.get(self.captcha_url).content
         return str(base64.b64encode(captcha_pic), encoding='utf-8')
 
@@ -38,6 +48,7 @@ class URP:
         self.day = day
 
     def get_classtable(self, username, password, captcha):
+        self.generate()
         user_info = {"zjh": username, "mm": password, "v_yzm": captcha}
 
         response = self.session.post(
@@ -86,3 +97,6 @@ class URP:
 
         ret = {"classtable": objs, "start": start}
         return json.dumps(ret, ensure_ascii=False)
+
+    def test(self):
+        print("URP")
