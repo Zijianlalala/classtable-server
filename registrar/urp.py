@@ -11,15 +11,15 @@ class URP(registrar.Registrar):
 
     def __init__(self):
         self.session = requests.session()
-        self.captcha_url = ''
-        self.login_url = ''
-        self.classtable_url = ''
-        self.html_head = ''
-        self.headers = ''
+        self.captcha_url = None
+        self.login_url = None
+        self.classtable_url = None
+        self.html_head = None
+        self.headers = None
 
     @abstractclassmethod
     def base_url(self):
-        return ''
+        return None
 
     def generate(self):
         self.captcha_url = self.base_url()+'validateCodeAction.do'
@@ -71,8 +71,10 @@ class URP(registrar.Registrar):
         for items in BeautifulSoup(str(soup.find_all('table')[7]), 'lxml').find_all('tr', {'class': 'odd'}):
             item = items.find_all('td')
             if len(item) < 10:
-                week_num_str = item[0].get_text().strip().replace(
-                    '周', '').replace('上', '').split('-')
+                week_num_str = re.sub(
+                    r'周|上', '', item[0].get_text().strip()).split('-')
+                # week_num_str = item[0].get_text().strip().replace(
+                #    '周', '').replace('上', '').split('-')
                 week_num = list(range(int(week_num_str[0]), int(
                     week_num_str[len(week_num_str)-1])+1))
                 day_of_week = int(item[1].get_text().strip())
