@@ -10,7 +10,7 @@ school_name为学校缩写,返回base64形式验证码图片
 
 ## /login [POST]
 参数 | 解释 | 样例
-- | :-: | -: 
+:-: | :-: | :-: 
 school|学校缩写|tsmc
 username|账号|123
 password|密码|456
