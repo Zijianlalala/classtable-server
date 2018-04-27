@@ -32,10 +32,13 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         school = request.form.get('school')
+        year = request.form.get('year')
+        month = request.form.get('month')
+        day = request.form.get('day')
         u = factory.Factory().get_object(school)
         u.set_state(session['state'])
         captcha_text = request.form.get('captcha_text')
-        u.start_time(2018, 3, 5)
+        u.start_time(year, month, day)
         ret = u.get_classtable(username, password, captcha_text)
         return ret
 
