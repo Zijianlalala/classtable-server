@@ -23,9 +23,9 @@ def login():
         u = factory.Factory().get_object(school)
         ret = u.get_captcha_base64()
         session['state'] = u.get_state()
-        return render_template('login.html', captcha_base64=ret,school=school)
+        #return render_template('login.html', captcha_base64=ret,school=school)
         # 返回base64形式字符串
-        #return ret
+        return ret
 
     # 不存在验证码直接发送POST请求
     else:
