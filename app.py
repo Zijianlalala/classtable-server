@@ -20,25 +20,31 @@ def login():
         school = request.values.get('school')
         if school==None:
             return 'No School'
+        
         u = factory.Factory().get_object(school)
         ret = u.get_captcha_base64()
+
         session['state'] = u.get_state()
-        #return render_template('login.html', captcha_base64=ret,school=school)
-        # 返回base64形式字符串
-        return ret
+        session['school'] = school
+
+        return render_template('login.html', captcha_base64=ret,school=school)
 
     # 不存在验证码直接发送POST请求
     else:
+        school = session['school']
+        u = factory.Factory().get_object(school)
+        u.set_state(session['state'])
+
         username = request.form.get('username')
         password = request.form.get('password')
-        school = request.form.get('school')
+        captcha_text = request.form.get('captcha_text')
+        
         year = request.form.get('year')
         month = request.form.get('month')
         day = request.form.get('day')
-        u = factory.Factory().get_object(school)
-        u.set_state(session['state'])
-        captcha_text = request.form.get('captcha_text')
+        
         u.start_time(year, month, day)
+        
         ret = u.get_classtable(username, password, captcha_text)
         return ret
 
