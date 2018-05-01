@@ -34,26 +34,14 @@
                                     </div>
                 
                                     <div class="form-group">
-                                            <label>选择年份</label>
-                                            <select class="form-control" name="year">
-                                              <option>2018</option>
-                                            </select>
+                                            <label>开学日期</label>
+                                            <input type="text" id="datepicker" class="form-control" name="date">
                                     </div>
-                                    <div class="form-group">
-                                            <label>选择月份</label>
-                                            <select class="form-control" name="month">
-                                              <option>5</option>
-                                            </select>
-                                    </div>
-                                    <div class="form-group">
-                                            <label>选择日期</label>
-                                            <select class="form-control" name="day">
-                                              <option>1</option>
-                                            </select>
-                                    </div>
+                    
                                     <div class="form-group">
                                             <label>验证码</label>
                                             <img class="img-responsive" src='data:image/jpg;base64,{{captcha_base64}}'>
+                                            <br>
                                             <input type="captcha" class="form-control" placeholder="Captcha" name="captcha_text">
                                           </div>
                                     
@@ -62,7 +50,18 @@
                     </div>
                     </div>
                 </div>
-        
+                <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+                <script>
+                $(function() {
+                  $( "#datepicker" ).datepicker({
+                    changeMonth: true,
+                    changeYear: true
+                  });
+                });
+                </script>
 </body>
 
 </html>
