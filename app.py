@@ -18,16 +18,20 @@ def login():
     # 存在验证码使用GET请求获取验证码
     if request.method == 'GET':
         school = request.values.get('school')
-        if school==None:
-            return 'No School'
-        
+
+        if school == None:
+            return render_template('index.html', index='Ya')
+
         u = factory.Factory().get_object(school)
         ret = u.get_captcha_base64()
 
         session['state'] = u.get_state()
         session['school'] = school
 
-        return render_template('login.html', captcha_base64=ret,school=school)
+        if ret == 'TimeOut':
+            return render_template('timeout.html')
+        else:
+            return render_template('login.html', captcha_base64=ret, school=school)
 
     # 不存在验证码直接发送POST请求
     else:
@@ -38,13 +42,13 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         captcha_text = request.form.get('captcha_text')
-        
+
         year = request.form.get('year')
         month = request.form.get('month')
         day = request.form.get('day')
-        
+
         u.start_time(year, month, day)
-        
+
         ret = u.get_classtable(username, password, captcha_text)
         return ret
 

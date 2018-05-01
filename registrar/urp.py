@@ -39,7 +39,10 @@ class URP(registrar.Registrar):
 
     def get_captcha_base64(self):
         self.generate()
-        captcha_pic = self.session.get(self.captcha_url).content
+        try:
+            captcha_pic = self.session.get(self.captcha_url, timeout=1).content
+        except:
+            return "TimeOut"
         return str(base64.b64encode(captcha_pic), encoding='utf-8')
 
     def start_time(self, year, month, day):
@@ -55,10 +58,11 @@ class URP(registrar.Registrar):
             self.login_url, headers=self.headers, data=user_info)
 
         if str(response.text).find(u'<title>学分制综合教务</title>') < 0:
-            return 'Error'
-
-        text = self.html_head + self.session.get(self.classtable_url).text
-
+            return 'CaptchaError'
+        try:
+            text = self.html_head + self.session.get(self.classtable_url, timeout=3).text
+        except:
+            return "TimeOut"
         self.session.close()
 
         soup = BeautifulSoup(text, 'lxml')

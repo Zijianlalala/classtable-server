@@ -2,20 +2,26 @@
 <html>
 
 <head>
-    <title>{{school}}</title>
+    <title>获取课表数据</title>
 </head>
 
 <body>
     <form action="" method="POST">
-        <input type="text" placeholder="Enter Username" name="username" required>
+        <input type="text" placeholder="Year" name="year" required>
         <br>
-        <input type="password" placeholder="Enter Password" name="password" required>
+        <input type="text" placeholder="Month" name="month" required>
         <br>
-        <input type="captcha" placeholder="Enter Captcha" name="captcha_text" required>
+        <input type="text" placeholder="Day" name="day" required>
+        <br>
+        <input type="text" placeholder="Username" name="username" required>
+        <br>
+        <input type="password" placeholder="Password" name="password" required>
+        <br>
+        <input type="captcha" placeholder="Captcha" name="captcha_text" required>
         <br>
         <img src='data:image/jpg;base64,{{captcha_base64}}'>
         <br>
-        <button type="submit">Login</button>
+        <button type="submit">Submit</button>
     </form>
 </body>
 
