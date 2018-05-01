@@ -20,7 +20,7 @@ def login():
         school = request.values.get('school')
 
         if school == None:
-            return render_template('index.html', index='Ya')
+            return render_template('index.html')
 
         u = factory.Factory().get_object(school)
         ret = u.get_captcha_base64()
@@ -29,7 +29,9 @@ def login():
         session['school'] = school
 
         if ret == 'TimeOut':
-            return render_template('timeout.html')
+            return render_template('error.html', info='超时,请检查教务系统是否开放')
+        elif ret == 'UnknownError':
+            return render_template('error.html', info='发生未知错误')
         else:
             return render_template('login.html', captcha_base64=ret, school=school)
 
@@ -50,7 +52,7 @@ def login():
         u.start_time(year, month, day)
 
         ret = u.get_classtable(username, password, captcha_text)
-        return ret
+        return render_template('return.html', ret=ret)
 
 
 if __name__ == '__main__':

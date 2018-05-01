@@ -1,0 +1,5 @@
+#!/bin/bash
+DATE="Updated: "`date +%Y-%m-%d%t%H:%M:%S`
+git add .
+git commit -m "$DATE"
+git push origin master

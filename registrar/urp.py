@@ -1,10 +1,12 @@
+import base64
 import json
 import re
-import base64
+from abc import abstractclassmethod
+
 import requests
 from bs4 import BeautifulSoup
+
 from . import registrar
-from abc import abstractclassmethod
 
 
 class URP(registrar.Registrar):
@@ -43,6 +45,10 @@ class URP(registrar.Registrar):
             captcha_pic = self.session.get(self.captcha_url, timeout=1).content
         except:
             return "TimeOut"
+
+        if str(captcha_pic).find("html") != -1:
+            return "UnknownError"
+
         return str(base64.b64encode(captcha_pic), encoding='utf-8')
 
     def start_time(self, year, month, day):
@@ -60,7 +66,8 @@ class URP(registrar.Registrar):
         if str(response.text).find(u'<title>学分制综合教务</title>') < 0:
             return 'CaptchaError'
         try:
-            text = self.html_head + self.session.get(self.classtable_url, timeout=3).text
+            text = self.html_head + \
+                self.session.get(self.classtable_url, timeout=3).text
         except:
             return "TimeOut"
         self.session.close()
@@ -77,8 +84,6 @@ class URP(registrar.Registrar):
             if len(item) < 10:
                 week_num_str = re.sub(
                     r'周|上', '', item[0].get_text().strip()).split('-')
-                # week_num_str = item[0].get_text().strip().replace(
-                #    '周', '').replace('上', '').split('-')
                 week_num = list(range(int(week_num_str[0]), int(
                     week_num_str[len(week_num_str)-1])+1))
                 day_of_week = int(item[1].get_text().strip())

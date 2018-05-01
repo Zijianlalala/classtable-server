@@ -1,8 +1,10 @@
+import base64
 import json
 import re
-import base64
+
 import requests
 from bs4 import BeautifulSoup
+
 from . import registrar
 
 MAP = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
@@ -83,6 +85,10 @@ class TSMC(registrar.Registrar):
             captcha_pic = self.session.get(self.captcha_url, timeout=1).content
         except:
             return "TimeOut"
+
+        if str(captcha_pic).find("html") != -1:
+            return "UnknownError"
+
         return str(base64.b64encode(captcha_pic), encoding='utf-8')
 
     def start_time(self, year, month, day):
